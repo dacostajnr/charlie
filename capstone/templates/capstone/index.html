@@ -1,0 +1,146 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Capstone Project</title>
+	<link rel="stylesheet" type="text/css" href="{% static "capstone/css/bootstrap.min.css" %}">    
+    <link rel="stylesheet" type="text/css" href="{% static "capstone/css/morris.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "capstone/css/font-awesome.min.css" %}">
+</head>
+<body>
+    <nav class="navbar navbar-inverse " role="navigation">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">CAPSTONE</a>
+           </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">                        
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wifi"></i>Sensors<span class="badge">{{all_sensors.count}}</span><b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="men">                                
+                      {% for i in all_sensors %}
+                                    <li><a href="{% url "capstone:sensor_detail" i.id %}">{{i.name}}</a></li>
+                      {% endfor %}
+                    </ul>
+                </li> 
+                  <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell text-white"></i>Notifications<span class="badge">9</span><b class="caret"></b></a>
+                  <ul class="dropdown-menu" role="men">                                
+                      {% for i in c %}
+                                    <li><a href="#">{{i.name}}</a></li>
+                                {% endfor %}
+                  </ul>
+                </li> 
+                <li ><a href="#"><i class="fa fa-line-chart"> </i> Graphs</a></li>            
+            </ul>
+          <ul class="nav navbar-nav navbar-right">            
+            <li><a href="#"><i class="glyphicon glyphicon-user"></i></a></li>
+            <li><a class="btn "  data-toggle="modal" data-target="#popUpWindow">Sign in</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-log-out"></i></a></li>
+          </ul>
+          </div>
+    </nav>
+
+    <div class="container" >
+      <h1 class="text-center" style="font-style: Cartoon Slant">Anti Drowning System</h1>      
+        <!-- Modal -->
+        <div class="modal fade" id="popUpWindow" tabindex="0" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+            <div class="modal-dialog" >
+          <div class="modal-content" >
+            <!-- header -->
+            <div class="modal-header" >
+              <button type="button" class="close" data-dismiss="modal" >&times;</button>
+                        <h2 class="modal-title" id="myModalLabel" >Sign-In</h2>
+            </div>
+            <!-- body -->
+            <div class="modal-body" >
+                        <form class="form-signin" role="form-control" placeholder="Email address" required autofocus> 
+                            <h3 class="form-signin-heading" >Sign in with your email address</h3>
+                            <div class="form-group" >
+                                <input type="email" class="form-control" placeholder="Email address" required autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" placeholder="Password" required>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" value="remember-me">Remember me
+                                </label>
+                            </div>
+                            <button  class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>                               
+                        </form>
+            </div>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <a href="#" class="btn btn-facebook btn-caps btn-block">Facebook<span  class=""></span></a>                            
+                        </div>
+                        <div class="col-xs-3">
+                            <a href="#" class="btn btn-facebook btn-caps btn-block">Twitter<span  class=""></span></a>                            
+                        </div>                        
+                    </div>
+                    <div class="modal-footer"> 
+                        <p class="text-center"><a href="#">Register</a></p>
+                    </div>
+          </div>
+        </div>
+       </div>
+         <!-- Modal -->
+        
+        <div class="container">                
+          <div class="container">
+            <div class="row">
+              <div class="col-md-12 col-lg-12 col xs-12">
+                  <div id="page-wrapper">                               
+                    <div class="row">
+       
+                      {% for i in all_sensors %}            
+
+                     <div class="col-lg-6">
+                        <div class="panel panel-default">
+                          <div class="panel-heading">
+                            {{i.name}} Chart
+                          </div>                            
+                          <div class="panel-body">
+                            <div id="{{i.name}}"></div>
+                          </div>                            
+                          </div>                        
+                    </div>  
+                      {% endfor %}
+                    </div>                
+                  </div>              
+              </div>            
+            </div>          
+          </div>  
+        </div>
+
+
+        <footer>
+          <div class="row">
+            <div class="col-lg-12">
+              <p>Copyright &copy; <a href="#">coded with    <i class="fa fa-heart text-danger"></i>   by charlotte 2019</a> </p>
+            </div>
+          </div>
+        </footer>
+      </div>     
+        <script src="{% static "capstone/js/jquery.min.js" %}"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{% static "capstone/js/bootstrap.min.js" %}"></script>
+
+        <!-- Metis Menu Plugin JavaScript -->
+        <script src="{% static "capstone/js/metisMenu.min.js" %}"></script>
+
+        <!-- Morris Charts JavaScript -->
+        <script src="{% static "capstone/js/raphael.min.js" %}"></script>
+        <script src="{% static "capstone/js/morris.min.js" %}"></script>
+        <script src="{% static "capstone/js/morris-data.js" %}"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="{% static "capstone/js/startmin.js" %}"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Capstone Project</title>
+  <link rel="stylesheet" type="text/css" href="{% static "capstone/css/bootstrap.min.css" %}">    
+    <link rel="stylesheet" type="text/css" href="{% static "capstone/css/morris.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "capstone/css/font-awesome.min.css" %}">
+</head>
+<body>
+    <nav class="navbar navbar-inverse " role="navigation">
+        <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url "capstone:home" %}">CAPSTONE</a>
+           </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">                        
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-wifi"></i>Sensors<span class="badge">{{all_sensors.count}}</span><b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="men">                                
+                      {% for i in all_sensors %}
+                                    <li><a href="{% url "capstone:sensor_detail" i.id %}">{{i.name}}</a></li>
+                      {% endfor %}
+                    </ul>
+                </li> 
+                  <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell text-white"></i>Notifications<span class="badge">{{all_alarms.count}}</span><b class="caret"></b></a>
+                  <ul class="dropdown-menu" role="men">                                
+                      {% for i in all_alarms %}
+                                    <li><a href="{% url "capstone:notification_detail" i.id %}">{{i.sensor.name}} at {{i.value}}</a></li>
+                                {% endfor %}
+                  </ul>
+                </li> 
+                <li ><a href="#"><i class="fa fa-line-chart"> </i> Graphs</a></li>            
+            </ul>
+          <ul class="nav navbar-nav navbar-right">            
+            <li><a href="#"><i class="glyphicon glyphicon-user"></i></a></li>
+            <li><a class="btn "  data-toggle="modal" data-target="#popUpWindow">Sign in</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-log-out"></i></a></li>
+          </ul>
+          </div>
+    </nav>
+      
+        <script src="{% static "capstone/js/jquery.min.js" %}"></script>
+
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{% static "capstone/js/bootstrap.min.js" %}"></script>
+
+        <!-- Metis Menu Plugin JavaScript -->
+        <script src="{% static "capstone/js/metisMenu.min.js" %}"></script>
+
+        <!-- Morris Charts JavaScript -->
+        <script src="{% static "capstone/js/raphael.min.js" %}"></script>
+        <script src="{% static "capstone/js/morris.min.js" %}"></script>
+        <!-- <script src="{% static "capstone/js/morris-data.js" %}"></script -->
+        <!-- Custom Theme JavaScript -->
+        <script src="{% static "capstone/js/startmin.js" %}"></script>
+      
+      <div class="container">            
+      <div class="row">        
+        <h1>{{sensor.name}}</h1>
+        <div class="col-md-6">
+          <div id="graphid"></div>                  
+        </div>     
+
+        <div class="col-md-4">
+          <div>
+            
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Indicator</th>
+                  <th>Value</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Max Value</td>
+                  <td>{{max_value}}</td>
+                  <td>{{max_date_occured}}</td>
+                  <td>{{max_time_occured}}</td>
+                </tr>
+                <tr>
+                  <td>Min Value</td>
+                  <td>{{min_value}}</td>
+                  <td>{{min_date_occured}}</td>
+                  <td>{{min_time_occured}}</td>
+                </tr>                
+              </tbody>
+            </table>
+
+          </div>
+        </div>         
+      </div>
+       </div>
+      <script type="text/javascript">
+        let nReloads{{sensor.pid}}= 0;
+        let ret{{sensor.pid}}=[];
+        function data{{sensor.pid}}() { 
+        $.ajax({
+            url:"/ajax1/{{sensor.pid}}/",
+            data:{"type":"fetch_values"},
+            dataType:"json",
+                success:function(dataa){
+                  ret{{sensor.pid}}=[];
+                  for (var i=0;i<dataa["data"].length;i++){
+                      ret{{sensor.pid}}.push(dataa["data"][i]);
+                  }                                                
+                }
+            });           
+        console.log(ret{{sensor.pid}});        
+        return ret{{sensor.pid}};
+        }
+let graph{{sensor.pid}} = Morris.Line({
+    element: 'graphid',
+    data: data{{sensor.pid}}(),
+    xkey: 'time',
+    ykeys: ['value'],
+    labels: ['{{sensor.name}}'],
+    resize: 'true',
+});
+// -----------------------------------
+function update{{sensor.pid}}() {
+  nReloads{{sensor.pid}}++;
+ graph{{sensor.pid}}.setData(data{{sensor.pid}}());
+
+}
+// -----------------------------------
+// -----------------------------------
+update{{sensor.pid}}();
+setInterval(update{{sensor.pid}}, {{refresh_time}});
+// -----------------------------------
+</script>
+</body>
+</html> 
+
